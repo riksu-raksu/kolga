@@ -25,7 +25,7 @@ stages:
       displayName: execute tests
       steps:
         - script: ls -la tests/registry/certs && ls /__w/1/s/tests/registry/certs
-        - script: export && pwd && ls -la && ./devops test_setup && make test
+        - script: export && whoami && pwd && ls -la && ./devops test_setup && make test
           env:
-            PATH: $(PATH):$(Agent.BuildDirectory)
+            PATH: $(PATH):$(PWD)
             BUILT_DOCKER_TEST_IMAGE: $(./devops "docker_test_image")

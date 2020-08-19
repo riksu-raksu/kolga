@@ -82,7 +82,7 @@ services:
       - type: bind
         source: ./tests/registry/certs/docker_registry.crt
         target: /etc/docker/certs.d/docker-registry:5000/ca.crt
-    command: ${CLIENT_COMMAND}
+    command: bash -c "echo HERE && ls -la && pwd"
 
 volumes:
   k3s-server:
