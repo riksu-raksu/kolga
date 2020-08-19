@@ -80,9 +80,9 @@ services:
       - .:/app
       - /var/run/docker.sock:/var/run/docker.sock
       - type: bind
-        source: ./tests/registry/certs/docker_registry.crt
-        target: /etc/docker/certs.d/docker-registry:5000/ca.crt
-    command: bash -c "echo HERE && ls -la && pwd"
+        source: ./tests/registry/certs
+        target: /etc/docker/certs.d/docker-registry:5000/
+    command: ${CLIENT_COMMAND}
 
 volumes:
   k3s-server:
