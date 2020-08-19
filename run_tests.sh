@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 docker-compose down -v
+sudo chmod -R 777 ./tests
 whoami
 pwd
 ls -l tests
