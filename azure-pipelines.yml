@@ -24,7 +24,6 @@ stages:
       container: andersinnovations/devops:azure-test
       displayName: execute tests
       steps:
-        - script: ls -la tests/registry/certs && ls /__w/1/s/tests/registry/certs
         - script: export && whoami && pwd && ls -la && ./devops test_setup && make test
           env:
             PATH: $(PATH):$(PWD)
