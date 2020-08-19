@@ -199,7 +199,6 @@ class Devops:
         test_image = settings.BUILT_DOCKER_TEST_IMAGE
         if not test_image:
             raise ValueError(f"No test image {test_image} found")
-        print(f"TEST_IMAGE IS '{test_image}'")
         d.pull_image(test_image)
 
     def docker_test_image(self) -> None:

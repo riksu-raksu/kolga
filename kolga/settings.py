@@ -80,7 +80,7 @@ _VARIABLE_DEFINITIONS: Dict[str, List[Any]] = {
     "DATABASE_USER": [env.str, "user"],
     "MYSQL_VERSION_TAG": [env.str, "5.7"],
     "POSTGRES_IMAGE": [env.str, "docker.io/bitnami/postgresql:9.6"],
-    "RABBITMQ_VERSION_TAG": [env.str, "3.8.2"],
+    "RABBITMQ_VERSION_TAG": [env.str, "3.8.5"],
     "SERVICE_ARTIFACT_FOLDER": [env.str, ""],
     # ================================================
     # KUBERNETES
@@ -93,9 +93,14 @@ _VARIABLE_DEFINITIONS: Dict[str, List[Any]] = {
     "K8S_CERTMANAGER_USE_OLD_API": [env.bool, False],
     "K8S_INGRESS_MAX_BODY_SIZE": [env.str, "100m"],
     "K8S_INGRESS_PREVENT_ROBOTS": [env.bool, False],
+    "K8S_LIVENESS_PATH": [env.str, "/healthz"],
     "K8S_NAMESPACE": [env.str, ""],
+    "K8S_PROBE_FAILURE_THRESHOLD": [env.int, 3],
+    "K8S_PROBE_INITIAL_DELAY": [env.int, 60],
+    "K8S_PROBE_PERIOD": [env.int, 10],
     "K8S_FILE_SECRET_MOUNTPATH": [env.str, "/tmp/secrets"],
     "K8S_FILE_SECRET_PREFIX": [env.str, "K8S_FILE_SECRET_"],
+    "K8S_READINESS_PATH": [env.str, "/readiness"],
     "K8S_REQUEST_CPU": [env.str, ""],
     "K8S_REQUEST_RAM": [env.str, ""],
     "K8S_SECRET_PREFIX": [env.str, "K8S_SECRET_"],
@@ -105,6 +110,10 @@ _VARIABLE_DEFINITIONS: Dict[str, List[Any]] = {
     "K8S_TEMP_STORAGE_PATH": [env.str, ""],
     "KUBECONFIG": [env.str, ""],
     "DEPENDS_ON_PROJECTS": [env.str, ""],
+    # ================================================
+    # PIPELINE
+    # ================================================
+    "KOLGA_JOBS_ONLY": [env.bool, False],
 }
 
 
@@ -150,9 +159,14 @@ class Settings:
     K8S_CERTMANAGER_USE_OLD_API: bool
     K8S_INGRESS_MAX_BODY_SIZE: str
     K8S_INGRESS_PREVENT_ROBOTS: bool
+    K8S_LIVENESS_PATH: str
     K8S_NAMESPACE: str
+    K8S_PROBE_FAILURE_THRESHOLD: int
+    K8S_PROBE_INITIAL_DELAY: int
+    K8S_PROBE_PERIOD: int
     K8S_FILE_SECRET_MOUNTPATH: str
     K8S_FILE_SECRET_PREFIX: str
+    K8S_READINESS_PATH: str
     K8S_REQUEST_CPU: str
     K8S_REQUEST_RAM: str
     K8S_SECRET_PREFIX: str
@@ -162,6 +176,7 @@ class Settings:
     K8S_TEMP_STORAGE_PATH: str
     KUBECONFIG: str
     DEPENDS_ON_PROJECTS: str
+    KOLGA_JOBS_ONLY: bool
 
     def __init__(self) -> None:
         missing_vars = _VARIABLE_DEFINITIONS.keys() - self.__annotations__.keys()
@@ -173,7 +188,7 @@ class Settings:
         self.devops_root_path = Path(sys.argv[0]).resolve().parent
 
         self.active_ci: Optional[Any] = None
-        self.supported_cis: List[Any] = [GitLabMapper(), AzurePipelinesMapper()]
+        self.supported_cis: List[Any] = [GitLabMapper()]
         self._set_ci_environment()
         setattr(self, PROJECT_NAME_VAR, self._get_project_name())
 
@@ -281,26 +296,6 @@ class Settings:
             return kubeconfig, key
 
         raise NoClusterConfigError()
-
-
-class AzurePipelinesMapper:
-    MAPPING = {
-        "BUILD_SOURCEBRANCHNAME": "GIT_COMMIT_REF_NAME",  # TODO: Do this programmatically instead
-        "BUILD_SOURCEVERSION": "GIT_COMMIT_SHA",
-        "SYSTEM_TEAMPROJECT": "PROJECT_NAME",
-    }
-
-    def __str__(self) -> str:
-        return "Azure Pipelines"
-
-    @property
-    def is_active(self) -> bool:
-        print(env.str("AZURE_HTTP_USER_AGENT", ""))
-        return bool(env.str("AZURE_HTTP_USER_AGENT", ""))
-
-    @property
-    def VALID_FILE_SECRET_PATH_PREFIXES(self) -> List[str]:
-        return ["/builds/"]
 
 
 class GitLabMapper:

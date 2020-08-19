@@ -29,7 +29,10 @@ class Helm:
         logger.info(icon=f"{self.ICON}  🚀", title="Initializing Helm")
 
         # TODO: Remove once this is added by default and Helm 3 is stable
-        self.add_repo("stable", "https://kubernetes-charts.storage.googleapis.com/")
+        self.add_repo(
+            "stable", "https://kubernetes-charts.storage.googleapis.com/", update=False
+        )
+        self.add_repo("bitnami", "https://charts.bitnami.com/bitnami", update=False)
 
         self.update_repos()
 
@@ -115,6 +118,13 @@ class Helm:
             icon=f"{self.ICON}  📄", title=f"Upgrading chart from '{chart}': ", end="",
         )
 
+        replica_timeout_multiplier = 2 if settings.K8S_REPLICACOUNT > 1 else 1
+        timeout = (
+            (settings.K8S_PROBE_INITIAL_DELAY * replica_timeout_multiplier)
+            + (settings.K8S_PROBE_FAILURE_THRESHOLD * settings.K8S_PROBE_PERIOD)
+            + 120  # Buffer time
+        )
+
         # Construct initial helm upgrade command
         install_arg = "--install" if install else ""
         helm_command = [
@@ -122,7 +132,7 @@ class Helm:
             "upgrade",
             "--atomic",
             "--timeout",
-            "180s",
+            f"{timeout}s",
             "--history-max",
             "30",
             install_arg,

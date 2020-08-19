@@ -46,8 +46,13 @@ class _Application(TypedDict, total=False):
     fileSecretPath: str
     initializeCommand: str
     livenessFile: str
+    livenessPath: str
     migrateCommand: str
+    probeFailureThreshold: int
+    probeInitialDelay: int
+    probePeriod: int
     readinessFile: str
+    readinessPath: str
     requestCpu: str
     requestRam: str
     secretName: str
@@ -84,6 +89,7 @@ class ApplicationDeploymentValues(HelmValues, total=False):
     releaseOverride: str
     replicaCount: int
     service: _Service
+    jobsOnly: bool
 
 
 class Kubernetes:
@@ -433,6 +439,11 @@ class Kubernetes:
             "application": {
                 "initializeCommand": project.initialize_command,
                 "migrateCommand": project.migrate_command,
+                "probeFailureThreshold": project.probe_failure_threshold,
+                "probeInitialDelay": project.probe_initial_delay,
+                "probePeriod": project.probe_period,
+                "livenessPath": project.liveness_path,
+                "readinessPath": project.readiness_path,
                 "secretName": project.secret_name,
                 "track": track,
             },
@@ -450,6 +461,7 @@ class Kubernetes:
                 "url": project.url,
                 "urls": [project.url, *project.additional_urls],
             },
+            "jobsOnly": settings.KOLGA_JOBS_ONLY,
         }
 
         if project.basic_auth_secret_name:

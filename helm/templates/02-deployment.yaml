@@ -1,3 +1,4 @@
+{{- if (not .Values.jobsOnly) -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -68,9 +69,11 @@ spec:
               - {{ .Values.application.livenessFile }}
           {{ else }}
           livenessProbe:
-            initialDelaySeconds: 60
+            initialDelaySeconds: {{ .Values.application.probeInitialDelay }}
+            failureThreshold: {{ .Values.application.probeFailureThreshold }}
+            periodSeconds: {{ .Values.application.probePeriod }}
             httpGet:
-              path: /healthz
+              path: "{{ .Values.application.livenessPath }}"
               port: {{ .Values.service.targetPort }}
           {{- end }}
           {{- if .Values.application.readinessFile }}
@@ -81,9 +84,11 @@ spec:
               - {{ .Values.application.readinessFile }}
           {{ else }}
           readinessProbe:
-            initialDelaySeconds: 60
+            initialDelaySeconds: {{ .Values.application.probeInitialDelay }}
+            failureThreshold: {{ .Values.application.probeFailureThreshold }}
+            periodSeconds: {{ .Values.application.probePeriod }}
             httpGet:
-              path: /readiness
+              path: "{{ .Values.application.readinessPath }}"
               port: {{ .Values.service.targetPort }}
           {{- end }}
           {{- if or .Values.application.fileSecretName .Values.application.temporaryStoragePath }}
@@ -111,3 +116,4 @@ spec:
             secretName: {{ .Values.application.fileSecretName }}
       {{- end }}
       {{- end }}
+{{- end }}
