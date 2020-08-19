@@ -20,4 +20,4 @@ stages:
       - script: export && whoami && pwd && ls -la && ./devops test_setup && make test
         env:
           PATH: $(PATH):"$(PWD)"
-          BUILT_DOCKER_TEST_IMAGE: $(./devops "docker_test_image")
+          BUILT_DOCKER_TEST_IMAGE: $(devops "docker_test_image")
