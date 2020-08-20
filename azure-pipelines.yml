@@ -26,7 +26,10 @@ stages:
     container: andersinnovations/devops:azure-test
     displayName: execute tests
     steps:
-    - script: echo $(stageDependencies.Build.outputs['Build.export.BUILT_DOCKER_TEST_IMAGE'])
+    - script: echo $(BUILT_DOCKER_TEST_IMAGE_2)
+    - script: echo $(BUILT_DOCKER_TEST_IMAGE)
     - script: export && whoami && pwd && ls -la && ./devops test_setup && make test
       env:
         BUILT_DOCKER_TEST_IMAGE: $(stageDependencies.Build.outputs['Build.export.BUILT_DOCKER_TEST_IMAGE'])
+      variables:
+        BUILT_DOCKER_TEST_IMAGE_2: $(stageDependencies.Build.outputs['Build.export.BUILT_DOCKER_TEST_IMAGE'])
