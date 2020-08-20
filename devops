@@ -206,7 +206,6 @@ class Devops:
 
         d = Docker()
         tag = d.test_image_tag()
-        print("HERE I AM")
         print(tag)  # noqa: T001
 
     def logo(self) -> None:
