@@ -17,7 +17,14 @@ stages:
     displayName: Build
     steps:
       - script: pwd && export && source ./utils/shell_utils.sh && setup_buildkit && ./devops create_images
-      - script: export && whoami && pwd && ls -la && ./devops test_setup && make test
-        env:
-          PATH: $(PATH):"$(PWD)"
-          BUILT_DOCKER_TEST_IMAGE: $(devops "docker_test_image")
+      - script: echo "##vso[task.setvariable variable=BUILT_DOCKER_TEST_IMAGE;isOutput=true]$(./devops 'docker_test_image')"
+        name: export
+- stage: Test
+  displayName: execute tests
+  jobs:
+  - job: test
+    container: andersinnovations/devops:azure-test
+    displayName: execute tests
+    steps:
+    - script: export && whoami && pwd && ls -la && ./devops test_setup && make test
+      env: BUILT_DOCKER_TEST_IMAGE: stageDependencies.Build.outputs['Build.export.BUILT_DOCKER_TEST_IMAGE']
