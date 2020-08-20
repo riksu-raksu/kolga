@@ -19,6 +19,7 @@ stages:
       - script: pwd && export && source ./utils/shell_utils.sh && setup_buildkit && ./devops create_images
       - script: echo '##vso[task.setvariable variable=BUILT_DOCKER_TEST_IMAGE;isOutput=true]$[./devops "docker_test_image"]'
       - script: ls -la /__a/
+      - script: cat /__w/1/s/tests/registry/certs/docker_registry.crt
         name: export
 - stage: test
   displayName: execute tests
