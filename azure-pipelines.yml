@@ -33,9 +33,11 @@ stages:
     - task: DockerCompose@0
       displayName: docker-compose
       inputs:
+        action: Run a Docker Compose command
         containerregistrytype: Container Registry
         dockerRegistryEndpoint: anders docker registry
         dockerComposeFile: /__w/1/s/docker-compose.yml
+        dockerComposeCommand: up
       env:
         BUILT_DOCKER_TEST_IMAGE: docker.anders.fi/devops/azure-kolga-demo:cbf9a0422ffb9aa2eb51c40a7c6464666bf3e6c5-development
 
