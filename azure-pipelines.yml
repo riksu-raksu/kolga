@@ -32,4 +32,4 @@ stages:
       env:
         BUILT_DOCKER_TEST_IMAGE: $(stageDependencies.Build.outputs['Build.export.BUILT_DOCKER_TEST_IMAGE'])
     variables:
-      BUILT_DOCKER_TEST_IMAGE_2: $(stageDependencies.Build.outputs['Build.export.BUILT_DOCKER_TEST_IMAGE'])
+      BUILT_DOCKER_TEST_IMAGE_2: $(stageDependencies.Build.Build.outputs['export.BUILT_DOCKER_TEST_IMAGE'])
