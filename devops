@@ -205,7 +205,9 @@ class Devops:
         from kolga.libs.docker import Docker
 
         d = Docker()
-        print(d.test_image_tag())  # noqa: T001
+        tag = d.test_image_tag()
+        print("HERE I AM")
+        print(tag)  # noqa: T001
 
     def logo(self) -> None:
         logo = """
