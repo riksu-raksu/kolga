@@ -7,6 +7,8 @@ pool:
 
 variables:
 - group: kolga-vars
+- name: BUILT_DOCKER_TEST_IMAGE
+  value: ''
 
 stages:
 - stage: Build
