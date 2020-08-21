@@ -65,7 +65,8 @@ def create_artifact_file_from_dict(
     with env_file.open(mode="w+") as f:
         for key, value in data.items():
             f.write(f"{key}={value}\n")
-
+    print(f"ENV FILE IS {env_file}")
+    
     return env_file  # type: ignore
 
 
