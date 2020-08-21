@@ -39,7 +39,7 @@ stages:
 #        dockerComposeFile: /__w/1/s/docker-compose.yml
 #        dockerComposeCommand: up
 #      env:
-#        BUILT_DOCKER_TEST_IMAGE: docker.anders.fi/devops/azure-kolga-demo:cbf9a0422ffb9aa2eb51c40a7c6464666bf3e6c5-development
+#        BUILT_DOCKER_TEST_IMAGE: docker.anders.fi/devops/azure-kolga-demo:52e8d6693c173482c6f82e06869693f929c6f87c-development
 - stage: test
   displayName: execute tests
   jobs:
