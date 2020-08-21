@@ -3,7 +3,7 @@ trigger:
 - azure-pipelines
 
 pool:
-  vmImage: 'Ubuntu 18.04'
+  vmImage: 'ubuntu-latest'
 
 variables:
 - group: kolga-vars
@@ -23,6 +23,23 @@ stages:
         name: cert
       - script: echo $HOME
         name: home
+#- stage: test
+#  displayName: execute tests
+#  jobs:
+#  - job: test
+#    container: andersinnovations/devops:azure-test
+#    displayName: execute tests
+#    steps:
+#    - task: DockerCompose@0
+#      displayName: docker-compose
+#      inputs:
+#        action: Run a Docker Compose command
+#        containerregistrytype: Container Registry
+#        dockerRegistryEndpoint: anders docker registry
+#        dockerComposeFile: /__w/1/s/docker-compose.yml
+#        dockerComposeCommand: up
+#      env:
+#        BUILT_DOCKER_TEST_IMAGE: docker.anders.fi/devops/azure-kolga-demo:cbf9a0422ffb9aa2eb51c40a7c6464666bf3e6c5-development
 - stage: test
   displayName: execute tests
   jobs:
@@ -30,35 +47,19 @@ stages:
     container: andersinnovations/devops:azure-test
     displayName: execute tests
     steps:
-    - task: DockerCompose@0
-      displayName: docker-compose
-      inputs:
-        action: Run a Docker Compose command
-        containerregistrytype: Container Registry
-        dockerRegistryEndpoint: anders docker registry
-        dockerComposeFile: /__w/1/s/docker-compose.yml
-        dockerComposeCommand: up
-      env:
-        BUILT_DOCKER_TEST_IMAGE: docker.anders.fi/devops/azure-kolga-demo:cbf9a0422ffb9aa2eb51c40a7c6464666bf3e6c5-development
-
-#- stage: Test
-#  displayName: execute tests
-#  jobs:
-#  - job: test
-#    container: andersinnovations/devops:azure-test
-#    displayName: execute tests
-#    steps:
-#    - script: echo $(VARIABLE1)
-#      name: variable_1
-#    - script: echo $(VARIABLE2)
-#      name: variable_2
-#    - script: echo $(VARIABLE3)
-#      name: variable_3
-#    - script: echo $(stageDependencies.Build.Build.outputs['export.BUILT_DOCKER_TEST_IMAGE'])
-#    - script: echo $(stageDependencies.Build.outputs['Build.export.BUILT_DOCKER_TEST_IMAGE'])
-#    - script: export && whoami && pwd && ls -la && ./devops test_setup && make test
-#      name: run_tests
-#    variables:
-#      VARIABLE1: $[stageDependencies.Build.Build.outputs['export.BUILT_DOCKER_TEST_IMAGE']]
-#      VARIABLE2: $[stageDependencies.Build.outputs['Build.export.BUILT_DOCKER_TEST_IMAGE']]
-#      VARIABLE3: $[stageDependencies.Build.outputs['Build.export.NONEXISTING']]
+    - script: echo $(VARIABLE1)
+      name: variable_1
+    - script: echo $(VARIABLE2)
+      name: variable_2
+    - script: echo $(VARIABLE3)
+      name: variable_3
+    - script: echo $(stageDependencies.Build.Build.outputs['export.BUILT_DOCKER_TEST_IMAGE'])
+    - script: echo $(stageDependencies.Build.outputs['Build.export.BUILT_DOCKER_TEST_IMAGE'])
+    - script: export && whoami && pwd && ls -la && ./devops test_setup && make test
+      name: run_tests
+    variables:
+      VARIABLE1: $[stageDependencies.Build.Build.outputs['export.BUILT_DOCKER_TEST_IMAGE']]
+      VARIABLE2: $[stageDependencies.Build.outputs['Build.export.BUILT_DOCKER_TEST_IMAGE']]
+      VARIABLE3: $[stageDependencies.Build.outputs['Build.export.NONEXISTING']]
+    env:
+      BUILT_DOCKER_TEST_IMAGE: docker.anders.fi/devops/azure-kolga-demo:cbf9a0422ffb9aa2eb51c40a7c6464666bf3e6c5-development
