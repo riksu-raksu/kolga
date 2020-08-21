@@ -16,13 +16,19 @@ stages:
     container: andersinnovations/devops:azure-test
     displayName: build
     steps:
-      - script: pwd && export && source ./utils/shell_utils.sh && setup_buildkit && ./devops create_images && ls -la && cat docker_build.env
-      - script: echo '##vso[task.setvariable variable=BUILT_DOCKER_TEST_IMAGE;isOutput=true]$[./devops "docker_test_image"]'
+      - script: |
+          pwd
+          export
+          source ./utils/shell_utils.sh
+          setup_buildkit
+          ./devops create_images
+          ls -la
+          cat docker_build.env
+        name: build
+      - script: |
+          echo '##vso[task.setvariable variable=BUILT_DOCKER_TEST_IMAGE;isOutput=true]$[./devops "docker_test_image"]'
+          echo VARIABLE VALUE IS $(BUILT_DOCKER_TEST_IMAGE)
         name: export
-      - script: cat /__w/1/s/tests/registry/certs/docker_registry.crt
-        name: cert
-      - script: echo $HOME
-        name: home
 #- stage: test
 #  displayName: execute tests
 #  jobs:
