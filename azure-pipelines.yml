@@ -58,7 +58,7 @@ stages:
     - script: export && whoami && pwd && ls -la && ./devops test_setup && make test
       name: run_tests
       env:
-        BUILT_DOCKER_TEST_IMAGE: docker.anders.fi/devops/azure-kolga-demo:cbf9a0422ffb9aa2eb51c40a7c6464666bf3e6c5-development
+        BUILT_DOCKER_TEST_IMAGE: docker.anders.fi/devops/azure-kolga-demo:52e8d6693c173482c6f82e06869693f929c6f87c-development
     variables:
       VARIABLE1: $[stageDependencies.Build.Build.outputs['export.BUILT_DOCKER_TEST_IMAGE']]
       VARIABLE2: $[stageDependencies.Build.outputs['Build.export.BUILT_DOCKER_TEST_IMAGE']]
